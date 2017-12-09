@@ -1,0 +1,32 @@
+{
+  "description": "This extension parses response of custom request headers to check for vulnerabilities. Currently it checks for Host Header Injection, CORS Misconfiguration and missing X-XSS-Protection headers.",
+  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/find-across-tabs",
+  "manifest_version": 2,
+  "name": "Response scanner extension",
+  "permissions": [
+    "find",
+    "tabs",
+    "webRequest",
+    "<all_urls>",
+    "webRequestBlocking"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "icons": {
+    "32": "scan.svg"
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Response scanner",
+    "default_icon": {
+        "32": "scan.svg"
+    }
+  },
+  "version": "1.0",
+  "applications": {
+    "gecko": {
+      "strict_min_version": "57.0a1"
+    }
+  }
+}
