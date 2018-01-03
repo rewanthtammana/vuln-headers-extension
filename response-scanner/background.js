@@ -1,3 +1,7 @@
+// Declaring sets to remove displaying of duplicate URls
+var corsSet = new Set();
+var hostHeaderSet = new Set();
+
 browser.browserAction.onClicked.addListener(() => {
   browser.tabs.create({"url": "/display.html"});
 });
@@ -64,6 +68,8 @@ function verifyHeaders(e) {
   //if(e.statusCode == 302 || e.statusCode == 301) {
     let hostHeaderInjectionCheckPattern = "evilhosth3r0kU";
     let corsMisconfigurationCheckPattern = "evil.com";
+
+    // DOM Elements
     corslist = document.getElementById('result-list');
     hostlist = document.getElementById('host-header-list');
 
@@ -71,7 +77,11 @@ function verifyHeaders(e) {
       //console.log(header);
       if (header.name.toLowerCase() == "location" && header.value.match(hostHeaderInjectionCheckPattern)) {
         console.log("hostHeaderInjection URL = " + e.url);
-        hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+        let tmp = hostHeaderSet.size;
+        hostHeaderSet.add(e.url);
+        if(hostHeaderSet.size != tmp) {
+          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+        }
       }
       // Checks for X-XSS-Protection missing header
       else if (header.name == "X-XSS-Protection") {
@@ -80,7 +90,11 @@ function verifyHeaders(e) {
       // Checks for CORS Misconfiguration vulnerability
       else if (header.value.match(corsMisconfigurationCheckPattern)) {
           console.log("CORS URL = " + e.url);
-          corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+          let tmp = corsSet.size;
+          corsSet.add(e.url);
+          if(corsSet.size != tmp) {
+            corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+          }
       }
     }
   }
