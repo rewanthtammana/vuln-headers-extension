@@ -64,11 +64,14 @@ function verifyHeaders(e) {
   //if(e.statusCode == 302 || e.statusCode == 301) {
     let hostHeaderInjectionCheckPattern = "evilhosth3r0kU";
     let corsMisconfigurationCheckPattern = "evil.com";
+    corslist = document.getElementById('result-list');
+    hostlist = document.getElementById('host-header-list');
 
     for (var header of e.responseHeaders) {
       //console.log(header);
       if (header.name.toLowerCase() == "location" && header.value.match(hostHeaderInjectionCheckPattern)) {
-        console.log("Redirected Location = " + header.value, "Main URL = " + e.url);
+        console.log("hostHeaderInjection URL = " + e.url);
+        hostlist.innerHTML = hostlist.innerHTML + '<div>' + e.url + '</div>';
       }
       // Checks for X-XSS-Protection missing header
       else if (header.name == "X-XSS-Protection") {
@@ -76,7 +79,8 @@ function verifyHeaders(e) {
       }
       // Checks for CORS Misconfiguration vulnerability
       else if (header.value.match(corsMisconfigurationCheckPattern)) {
-        console.log("Header name = " + header.name, "; Origin header value = " + header.value + "; Main URL = " + e.url)
+          console.log("CORS URL = " + e.url);
+          corslist.innerHTML = corslist.innerHTML + '<div>' + e.url + '</div>';
       }
     }
   }

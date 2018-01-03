@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap.min.css"/>
+    <style>
+      div.container {
+        overflow-x: auto;
+      }
+      ul.host-header-list {
+        overflow-x: auto;
+      }
+      ul.result-list {
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>Vulnerable Header Results</h3>
+      <hr>
+      <h2>CORS</h2>
+      <ul id="result-list"></ul>
+      <h2>Host header</h2>
+      <ul id="host-header-list"></ul>
+    </div>
+    <script src="background.js"></script>
+  </body>
+</html>

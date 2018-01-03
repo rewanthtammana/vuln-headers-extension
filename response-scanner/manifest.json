@@ -23,10 +23,5 @@
         "32": "scan.svg"
     }
   },
-  "version": "1.0",
-  "applications": {
-    "gecko": {
-      "strict_min_version": "57.0a1"
-    }
-  }
+  "version": "1.0"
 }
