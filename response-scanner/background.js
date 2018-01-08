@@ -80,7 +80,7 @@ function verifyHeaders(e) {
         let tmp = hostHeaderSet.size;
         hostHeaderSet.add(e.url);
         if(hostHeaderSet.size != tmp) {
-          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
         }
       }
       // Checks for X-XSS-Protection missing header
@@ -93,7 +93,7 @@ function verifyHeaders(e) {
           let tmp = corsSet.size;
           corsSet.add(e.url);
           if(corsSet.size != tmp) {
-            corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +'>' + e.url + '</a></div>';
+            corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
           }
       }
     }
