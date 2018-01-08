@@ -1,10 +1,9 @@
 {
-  "description": "This extension parses response of custom request headers to check for vulnerabilities. Currently it checks for Host Header Injection, CORS Misconfiguration.",
+  "description": "This extension parses headers to check for vulnerabilities. Currently it detects Host Header Injection, CORS Misconfiguration vulnerabilities.",
   "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/find-across-tabs",
   "manifest_version": 2,
-  "name": "Response scanner extension",
+  "name": "vuln-headers-extension",
   "permissions": [
-    "find",
     "tabs",
     "webRequest",
     "<all_urls>",
@@ -18,7 +17,7 @@
   },
   "browser_action": {
     "browser_style": true,
-    "default_title": "Response scanner",
+    "default_title": "vuln-headers-extension",
     "default_icon": {
         "32": "scan.svg"
     }
