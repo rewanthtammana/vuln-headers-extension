@@ -9,6 +9,11 @@ The extension currently detects URLs which are vulnerable to
 * Host Header Injection
 * Missing X-XSS-Protection headers
 
+## Achivements
+___
+Submitted vulnerabilities to websites like #signup.com , #Chargify, #Hotstar, #Medium, etc using this tool.
+Got listed in #Chargify HOF and other organisaitons are resolving the issues.
+
 ### Screenshots
 ![https://nyc3.digitaloceanspaces.com/rewanthcool/screenshot.PNG](https://nyc3.digitaloceanspaces.com/rewanthcool/screenshot.PNG)
 
