@@ -12,7 +12,7 @@ The extension currently detects URLs which are vulnerable to
 ### Screenshots
 ![https://nyc3.digitaloceanspaces.com/rewanthcool/screenshot.PNG](https://nyc3.digitaloceanspaces.com/rewanthcool/screenshot.PNG)
 
-### Installation steps
+### Installating
 ___
 ##### Method 1 -
 1. Clone the repo or fork it.
@@ -25,6 +25,17 @@ ___
 2. Install the [web-ext](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Getting_started_with_web-ext) tool, a npm package.
 3. Change into the directory where you cloned the repo.
 4. Type `web-ext run`. This will launch Firefox and install the extension.
+
+### Using -
+1. Once you install the extension you can see an icon in the tool bar.
+2. Click on the icon and a new tab gets opened.
+3. Leave it open and do your browsing/work.
+4. The extension automatically logs all the vulnerable URLs to the new tab.
+5. Now you can submit a report to the respective organisaiton and make it more secure.
+
+### Contributing
+Want to add more features to it? **Fork the repo** and create a [Pull Request](https://help.github.com/articles/creating-a-pull-request/).
+Like this tool, **STAR** it and click on **Watch** to get more updates on this tool.
 
 #### Article
 https://medium.com/@rewanthcool/firefox-vuln-headers-extension-e848b6d80d14
