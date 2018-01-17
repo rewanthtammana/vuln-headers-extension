@@ -7,7 +7,8 @@ ___
 The extension currently detects URLs which are vulnerable to
 * CORS Misconfiguration
 * Host Header Injection
-* Missing X-XSS-Protection headers
+* Missing X-XSS-Protection headers (commented in the code due to its low severity)
+* Clickjacking support
 
 ## Achivements
 ___

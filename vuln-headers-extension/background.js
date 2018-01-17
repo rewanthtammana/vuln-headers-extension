@@ -1,6 +1,7 @@
 // Declaring sets to remove displaying of duplicate URls
 var corsSet = new Set();
 var hostHeaderSet = new Set();
+var clickjackingSet = new Set();
 
 browser.browserAction.onClicked.addListener(() => {
   browser.tabs.create({"url": "/display.html"});
@@ -62,6 +63,7 @@ browser.webRequest.onBeforeSendHeaders.addListener(
 function verifyHeaders(e) {
 
   let xssProtectionFlag = 0;
+  let xFrameOptionsFlag = 0;
 
   // Checks for redirection
   if(e.statusCode) {
@@ -72,6 +74,7 @@ function verifyHeaders(e) {
     // DOM Elements
     corslist = document.getElementById('result-list');
     hostlist = document.getElementById('host-header-list');
+    clickjackinglist = document.getElementById('clickjacking-header-list');
 
     for (var header of e.responseHeaders) {
       //console.log(header);
@@ -84,17 +87,22 @@ function verifyHeaders(e) {
         }
       }
       // Checks for X-XSS-Protection missing header
-      else if (header.name == "X-XSS-Protection") {
+      else if (header.name.toLowerCase() == "x-xss-protection") {
         xssProtectionFlag = 1;
       }
       // Checks for CORS Misconfiguration vulnerability
       else if (header.value.match(corsMisconfigurationCheckPattern)) {
-          console.log("CORS URL = " + e.url);
-          let tmp = corsSet.size;
-          corsSet.add(e.url);
-          if(corsSet.size != tmp) {
-            corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
-          }
+        console.log("CORS URL = " + e.url);
+        let tmp = corsSet.size;
+        corsSet.add(e.url);
+        if(corsSet.size != tmp) {
+          corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
+        }
+      }
+      else if (header.name.toLowerCase() == "x-frame-options") {
+        if(header.value.toLowerCase() == "sameorigin" || header.value.toLowerCase() == "allow-from" || header.value.toLowerCase() == "deny") {
+          xFrameOptionsFlag = 1;
+        }
       }
     }
   }
@@ -102,6 +110,16 @@ function verifyHeaders(e) {
   // Ignored as of now for testing other plugins.
   if (xssProtectionFlag == 0) {
     //console.log("X-XSS-Protection header missing : " + e.url);
+  }
+
+  // Checks for clickjacking attacks.
+  if (xFrameOptionsFlag == 0) {
+    console.log("Found missing X-Frame-Options header in " + e.url);
+    let tmp = clickjackingSet.size;
+    clickjackingSet.add(e.url);
+    if(clickjackingSet.size != tmp) {
+      clickjackinglist.innerHTML = clickjackinglist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
+    }
   }
 
   return {responseHeaders: e.responseHeaders};
