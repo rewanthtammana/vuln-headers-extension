@@ -3,10 +3,12 @@ var corsSet = new Set();
 var hostHeaderSet = new Set();
 var clickjackingSet = new Set();
 
+// Opens a new page to display the results
 browser.browserAction.onClicked.addListener(() => {
   browser.tabs.create({"url": "/display.html"});
 });
 
+// Callback function to notify the tab change
 function handleUpdated(tabId, changeInfo, tabInfo) {
   if (changeInfo.url) {
     //console.log(changeInfo);
@@ -24,13 +26,19 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
 
 browser.tabs.onUpdated.addListener(handleUpdated);
 
+// Adds custom headers to detect the existance of vulnerabilities
 function addCustomHeaders(e) {
 
-
+  // Flag to check for existance of X-Forwarded-Host header
   let xForwardedHostFlag = 0;
+  
+  // Malicious unique URLs (used as filters to detect vulnerabilities)
   let hostHeaderInjectionCheckUrl = "evilhosth3r0kU.com";
   let corsMisconfigurationCheckUrl = "http://evil.com";
 
+  // Iterates all headers to find for X-Forwarded-Host header
+  // If not found, this script will add the header and assigns malicious
+  // value to the header
   for (var header of e.requestHeaders) {
     if (header.name == "X-Forwarded-Host") {
       header.value = "http://" + hostHeaderInjectionCheckUrl;
@@ -38,14 +46,14 @@ function addCustomHeaders(e) {
     }
   }
   if (xForwardedHostFlag == 0) {
-    // Add the header.
+    // Adds the header.
     e.requestHeaders.push({
       "name": "X-Forwarded-Host",
       "value": hostHeaderInjectionCheckUrl
     });
   }
 
-  // Checking for CORS error
+  // Adds origin header with malicious URL to detect CORS vulnerability
   e.requestHeaders.push({
     "name": "Origin",
     "value": corsMisconfigurationCheckUrl
@@ -54,14 +62,17 @@ function addCustomHeaders(e) {
   return {requestHeaders: e.requestHeaders};
 }
 
+// Callbacks addCustomHeaders function to modify the original headers
 browser.webRequest.onBeforeSendHeaders.addListener(
   addCustomHeaders,
   {urls: ["<all_urls>"]},
   ["blocking", "requestHeaders"]
 );
 
+// Iterates the headers to confirm the existance of vulnerabilities
 function verifyHeaders(e) {
 
+  // Flags to detect missing XSS Protection and X-Frame-Options headers
   let xssProtectionFlag = 0;
   let xFrameOptionsFlag = 0;
 
@@ -71,13 +82,16 @@ function verifyHeaders(e) {
     let hostHeaderInjectionCheckPattern = "evilhosth3r0kU";
     let corsMisconfigurationCheckPattern = "evil.com";
 
-    // DOM Elements
+    // Creating DOM elements to display the results
     corslist = document.getElementById('result-list');
     hostlist = document.getElementById('host-header-list');
     clickjackinglist = document.getElementById('clickjacking-header-list');
 
+    // Iterates all the response headers to detect the malicious reflected headers
+    // to confirm the existance of vulnerability
     for (var header of e.responseHeaders) {
       //console.log(header);
+      // Checks for host header injection vulnerability
       if (header.name.toLowerCase() == "location" && header.value.match(hostHeaderInjectionCheckPattern)) {
         console.log("hostHeaderInjection URL = " + e.url);
         let tmp = hostHeaderSet.size;
@@ -99,6 +113,7 @@ function verifyHeaders(e) {
           corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
         }
       }
+      // Checks for clickjacking vulnerability
       else if (header.name.toLowerCase() == "x-frame-options") {
         if(header.value.toLowerCase() == "sameorigin" || header.value.toLowerCase() == "allow-from" || header.value.toLowerCase() == "deny") {
           xFrameOptionsFlag = 1;
@@ -107,12 +122,13 @@ function verifyHeaders(e) {
     }
   }
 
-  // Ignored as of now for testing other plugins.
+  // Ignored as of now for testing other plugins
+  // Enabling it will display all the URLs with missing X-XSS-Protection headers
   if (xssProtectionFlag == 0) {
     //console.log("X-XSS-Protection header missing : " + e.url);
   }
 
-  // Checks for clickjacking attacks.
+  // Appends clickjackign vulnerable URL to the result list
   if (xFrameOptionsFlag == 0) {
     console.log("Found missing X-Frame-Options header in " + e.url);
     let tmp = clickjackingSet.size;
@@ -125,6 +141,7 @@ function verifyHeaders(e) {
   return {responseHeaders: e.responseHeaders};
 }
 
+// Callbacks verifyHeaders function to read the response headers
 browser.webRequest.onHeadersReceived.addListener(
   verifyHeaders,
   {urls: ["<all_urls>"]},
