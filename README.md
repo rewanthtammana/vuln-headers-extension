@@ -10,7 +10,7 @@ The extension currently detects URLs which are vulnerable to
 * Missing X-XSS-Protection headers (commented in the code due to its low severity)
 * Clickjacking support
 
-## Achivements
+## Achievements
 ___
 Submitted vulnerabilities to websites like #signup.com , #Chargify, #Hotstar, #Medium, etc using this tool.
 Got listed in #Chargify HOF and other organisaitons are resolving the issues.
@@ -18,7 +18,7 @@ Got listed in #Chargify HOF and other organisaitons are resolving the issues.
 ### Screenshots
 ![https://cdn-images-1.medium.com/max/1000/1*naLtqSbJNKlodJaxNLZkjA.png](https://cdn-images-1.medium.com/max/1000/1*naLtqSbJNKlodJaxNLZkjA.png)
 
-### Installating
+### Installation
 ___
 ##### Method 1 -
 1. Clone the repo or fork it.
