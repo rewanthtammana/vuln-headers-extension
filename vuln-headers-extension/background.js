@@ -119,6 +119,12 @@ function verifyHeaders(e) {
           xFrameOptionsFlag = 1;
         }
       }
+      // Checks for clickjacking vulnerability w.r.t CSP
+      else if (header.name.toLowerCase() == "Content-Security-Policy" || header.name.toLowerCase() == "X-Content-Security-Policy"){
+	if(header.value.indexOf("frame-src 'none'") !== -1 || header.value.indexOf("frame-src 'self'") !== -1 || header.value.indexOf("frame-ancestors 'none'") !== -1 || header.value.indexOf("frame-ancestors 'self'") !== -1){
+	  xFrameOptionsFlag = 1;
+	 }
+      }
     }
   }
 
