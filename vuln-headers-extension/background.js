@@ -5,7 +5,9 @@ var clickjackingSet = new Set();
 
 // Opens a new page to display the results
 browser.browserAction.onClicked.addListener(() => {
-  browser.tabs.create({"url": "/display.html"});
+  browser.tabs.create({
+    "url": "/display.html"
+  });
 });
 
 // Callback function to notify the tab change
@@ -31,7 +33,7 @@ function addCustomHeaders(e) {
 
   // Flag to check for existance of X-Forwarded-Host header
   let xForwardedHostFlag = 0;
-  
+
   // Malicious unique URLs (used as filters to detect vulnerabilities)
   let hostHeaderInjectionCheckUrl = "evilhosth3r0kU.com";
   let corsMisconfigurationCheckUrl = "http://evil.com";
@@ -59,13 +61,16 @@ function addCustomHeaders(e) {
     "value": corsMisconfigurationCheckUrl
   });
 
-  return {requestHeaders: e.requestHeaders};
+  return {
+    requestHeaders: e.requestHeaders
+  };
 }
 
 // Callbacks addCustomHeaders function to modify the original headers
 browser.webRequest.onBeforeSendHeaders.addListener(
-  addCustomHeaders,
-  {urls: ["<all_urls>"]},
+  addCustomHeaders, {
+    urls: ["<all_urls>"]
+  },
   ["blocking", "requestHeaders"]
 );
 
@@ -77,8 +82,8 @@ function verifyHeaders(e) {
   let xFrameOptionsFlag = 0;
 
   // Checks for redirection
-  if(e.statusCode) {
-  //if(e.statusCode == 302 || e.statusCode == 301) {
+  if (e.statusCode) {
+    //if(e.statusCode == 302 || e.statusCode == 301) {
     let hostHeaderInjectionCheckPattern = "evilhosth3r0kU";
     let corsMisconfigurationCheckPattern = "evil.com";
 
@@ -96,8 +101,8 @@ function verifyHeaders(e) {
         console.log("hostHeaderInjection URL = " + e.url);
         let tmp = hostHeaderSet.size;
         hostHeaderSet.add(e.url);
-        if(hostHeaderSet.size != tmp) {
-          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
+        if (hostHeaderSet.size != tmp) {
+          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
         }
       }
       // Checks for X-XSS-Protection missing header
@@ -109,21 +114,21 @@ function verifyHeaders(e) {
         console.log("CORS URL = " + e.url);
         let tmp = corsSet.size;
         corsSet.add(e.url);
-        if(corsSet.size != tmp) {
-          corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
+        if (corsSet.size != tmp) {
+          corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
         }
       }
       // Checks for clickjacking vulnerability
       else if (header.name.toLowerCase() == "x-frame-options") {
-        if(header.value.toLowerCase() == "sameorigin" || header.value.toLowerCase() == "allow-from" || header.value.toLowerCase() == "deny") {
+        if (header.value.toLowerCase() == "sameorigin" || header.value.toLowerCase() == "allow-from" || header.value.toLowerCase() == "deny") {
           xFrameOptionsFlag = 1;
         }
       }
       // Checks for clickjacking vulnerability w.r.t CSP
-      else if (header.name.toLowerCase() == "Content-Security-Policy" || header.name.toLowerCase() == "X-Content-Security-Policy"){
-	if(header.value.indexOf("frame-src 'none'") !== -1 || header.value.indexOf("frame-src 'self'") !== -1 || header.value.indexOf("frame-ancestors 'none'") !== -1 || header.value.indexOf("frame-ancestors 'self'") !== -1){
-	  xFrameOptionsFlag = 1;
-	 }
+      else if (header.name.toLowerCase() == "content-security-policy" || header.name.toLowerCase() == "x-content-security-policy") {
+        if (header.value.indexOf("frame-src 'none'") !== -1 || header.value.indexOf("frame-src 'self'") !== -1 || header.value.indexOf("frame-ancestors 'none'") !== -1 || header.value.indexOf("frame-ancestors 'self'") !== -1) {
+          xFrameOptionsFlag = 1;
+        }
       }
     }
   }
@@ -139,17 +144,20 @@ function verifyHeaders(e) {
     console.log("Found missing X-Frame-Options header in " + e.url);
     let tmp = clickjackingSet.size;
     clickjackingSet.add(e.url);
-    if(clickjackingSet.size != tmp) {
-      clickjackinglist.innerHTML = clickjackinglist.innerHTML + '<div><a href=' + e.url +' target="_blank">' + e.url + '</a></div>';
+    if (clickjackingSet.size != tmp) {
+      clickjackinglist.innerHTML = clickjackinglist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
     }
   }
 
-  return {responseHeaders: e.responseHeaders};
+  return {
+    responseHeaders: e.responseHeaders
+  };
 }
 
 // Callbacks verifyHeaders function to read the response headers
 browser.webRequest.onHeadersReceived.addListener(
-  verifyHeaders,
-  {urls: ["<all_urls>"]},
+  verifyHeaders, {
+    urls: ["<all_urls>"]
+  },
   ["blocking", "responseHeaders"]
 );
