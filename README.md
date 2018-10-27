@@ -16,7 +16,7 @@ Submitted vulnerabilities to websites like #signup.com , #Chargify, #Hotstar, #M
 Got listed in #Chargify HOF and other organisaitons are resolving the issues.
 
 ### Screenshots
-![https://cdn-images-1.medium.com/max/1000/1*naLtqSbJNKlodJaxNLZkjA.png](https://cdn-images-1.medium.com/max/1000/1*naLtqSbJNKlodJaxNLZkjA.png)
+![https://raw.githubusercontent.com/rewanth1997/vuln-headers-extension/master/GUI.PNG](https://raw.githubusercontent.com/rewanth1997/vuln-headers-extension/master/GUI.PNG)
 
 ### Installation
 ___
