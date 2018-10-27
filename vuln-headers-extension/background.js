@@ -10,24 +10,6 @@ browser.browserAction.onClicked.addListener(() => {
   });
 });
 
-// Callback function to notify the tab change
-function handleUpdated(tabId, changeInfo, tabInfo) {
-  if (changeInfo.url) {
-    //console.log(changeInfo);
-    //console.log("Tab: " + tabId +" URL changed to " + changeInfo.url);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        console.log(xhttp.responseText);
-      }
-    };
-    //xhttp.open("GET", url, true);
-    //xhttp.send();
-  }
-}
-
-browser.tabs.onUpdated.addListener(handleUpdated);
-
 function buildTag(urlx, pattern) {
   let className = "hidden";
   if(urlx.match(new RegExp(pattern, 'i'))) {
@@ -103,7 +85,6 @@ function verifyHeaders(e) {
     // Iterates all the response headers to detect the malicious reflected headers
     // to confirm the existance of vulnerability
     for (var header of e.responseHeaders) {
-      //console.log(header);
       // Checks for host header injection vulnerability
       if (header.name.toLowerCase() == "location" && header.value.match(hostHeaderInjectionCheckPattern)) {
         // console.log("hostHeaderInjection URL = " + e.url);
@@ -123,12 +104,11 @@ function verifyHeaders(e) {
 
       // Checks for CORS Misconfiguration vulnerability
       else if (header.value.match(corsMisconfigurationCheckPattern)) {
-        // console.log("CORS URL = " + e.url);
+        // console.log("CORS Misconfiguration URL = " + e.url);
         let tmp = corsSet.size;
         corsSet.add(e.url);
         if (corsSet.size != tmp) {
           let pattern = $("#corsMatchPattern").val();
-          console.log("hello", buildTag(e.url, pattern), "world")
           $("#cors-list").append(buildTag(e.url, pattern));
         }
       }
