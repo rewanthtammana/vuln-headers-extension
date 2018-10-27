@@ -28,6 +28,14 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
 
 browser.tabs.onUpdated.addListener(handleUpdated);
 
+function buildTag(urlx, pattern) {
+  let className = "hidden";
+  if(urlx.match(new RegExp(pattern, 'i'))) {
+    className = "display";
+  }
+  return '<div class="' + className + '"><a href=' + urlx + ' target="_blank">' + urlx + '</a></div>';
+}
+
 // Adds custom headers to detect the existance of vulnerabilities
 function addCustomHeaders(e) {
 
@@ -88,7 +96,7 @@ function verifyHeaders(e) {
     let corsMisconfigurationCheckPattern = "evil.com";
 
     // Creating DOM elements to display the results
-    corslist = document.getElementById('result-list');
+    corslist = document.getElementById('cors-list');
     hostlist = document.getElementById('host-header-list');
     clickjackinglist = document.getElementById('clickjacking-header-list');
 
@@ -98,26 +106,33 @@ function verifyHeaders(e) {
       //console.log(header);
       // Checks for host header injection vulnerability
       if (header.name.toLowerCase() == "location" && header.value.match(hostHeaderInjectionCheckPattern)) {
-        console.log("hostHeaderInjection URL = " + e.url);
+        // console.log("hostHeaderInjection URL = " + e.url);
         let tmp = hostHeaderSet.size;
         hostHeaderSet.add(e.url);
         if (hostHeaderSet.size != tmp) {
-          hostlist.innerHTML = hostlist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
+          let pattern = $("#hostHeaderMatchPattern").val();
+          $("#host-header-list").append(buildTag(e.url, pattern));
         }
+
       }
+      
       // Checks for X-XSS-Protection missing header
       else if (header.name.toLowerCase() == "x-xss-protection") {
         xssProtectionFlag = 1;
       }
+
       // Checks for CORS Misconfiguration vulnerability
       else if (header.value.match(corsMisconfigurationCheckPattern)) {
-        console.log("CORS URL = " + e.url);
+        // console.log("CORS URL = " + e.url);
         let tmp = corsSet.size;
         corsSet.add(e.url);
         if (corsSet.size != tmp) {
-          corslist.innerHTML = corslist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
+          let pattern = $("#corsMatchPattern").val();
+          console.log("hello", buildTag(e.url, pattern), "world")
+          $("#cors-list").append(buildTag(e.url, pattern));
         }
       }
+
       // Checks for clickjacking vulnerability
       else if (header.name.toLowerCase() == "x-frame-options") {
         if (header.value.toLowerCase() == "sameorigin" || header.value.toLowerCase() == "allow-from" || header.value.toLowerCase() == "deny") {
@@ -141,11 +156,12 @@ function verifyHeaders(e) {
 
   // Appends clickjackign vulnerable URL to the result list
   if (xFrameOptionsFlag == 0) {
-    console.log("Found missing X-Frame-Options header in " + e.url);
+    // console.log("Found missing X-Frame-Options header in " + e.url);
     let tmp = clickjackingSet.size;
     clickjackingSet.add(e.url);
     if (clickjackingSet.size != tmp) {
-      clickjackinglist.innerHTML = clickjackinglist.innerHTML + '<div><a href=' + e.url + ' target="_blank">' + e.url + '</a></div>';
+      let pattern = $("#clickjackingMatchPattern").val();
+      $("#clickjacking-header-list").append(buildTag(e.url, pattern));
     }
   }
 

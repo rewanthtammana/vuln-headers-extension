@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="bootstrap.min.css"/>
     <style>
-      ul#host-header-list {
+      #host-header-list {
         overflow-x: auto;
         white-space: nowrap;
       }
-      ul#result-list {
+      #cors-list {
         overflow-x: auto;
         white-space: nowrap;
       }
-      ul#clickjacking-header-list {
+      #clickjacking-header-list {
         overflow-x: auto;
         white-space: nowrap;
       }
@@ -24,12 +24,17 @@
       <h3>Vulnerable Header Results</h3>
       <hr>
       <h2>CORS</h2>
-      <ul id="result-list"></ul>
+      <input type="text" class="form-control" id="corsMatchPattern" placeholder="Filter results.." title="Search query">
+      <div id="cors-list"></div>
       <h2>Host header</h2>
-      <ul id="host-header-list"></ul>
+      <input type="text" class="form-control" id="hostHeaderMatchPattern" placeholder="Filter results.." title="Search query">
+      <div id="host-header-list"></div>
       <h2>Clickjacking</h2>
-      <ul id="clickjacking-header-list"></ul>
+      <input type="text" class="form-control" id="clickjackingMatchPattern" placeholder="Filter results.." title="Search query">
+      <div id="clickjacking-header-list"></div>
     </div>
-    <script src="background.js"></script>
   </body>
+  <script src="jquery.min.js"></script>
+  <script src="search.js"></script>
+  <script src="background.js"></script>
 </html>

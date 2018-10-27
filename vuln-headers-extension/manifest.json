@@ -9,6 +9,8 @@
     "<all_urls>",
     "webRequestBlocking"
   ],
+  // CSP *must* be defined to trigger event handler functions
+  "content_security_policy": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'",
   "background": {
     "scripts": ["background.js"]
   },
