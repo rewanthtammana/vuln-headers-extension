@@ -12,16 +12,16 @@
   // CSP *must* be defined to trigger event handler functions
   "content_security_policy": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["js/background.js"]
   },
   "icons": {
-    "32": "scan.svg"
+    "32": "icons/scan.svg"
   },
   "browser_action": {
     "browser_style": true,
     "default_title": "vuln-headers-extension",
     "default_icon": {
-        "32": "scan.svg"
+        "32": "icons/scan.svg"
     }
   },
   "version": "1.0"

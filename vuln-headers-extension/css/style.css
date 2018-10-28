@@ -1,0 +1,12 @@
+#host-header-list {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+#cors-list {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+#clickjacking-header-list {
+    overflow-x: auto;
+    white-space: nowrap;
+}
